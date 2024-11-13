@@ -79,7 +79,9 @@ class AnimalRepository {
                 else -> AnimalGender.ANIMAL_GENDER_FEMALE
             }
 
-            val animalViewModel = AnimalViewModel(animalIdx, animalType, animalName!!, animalAge!!, animalGender)
+            val animalFavoriteSnack = animalVo?.animalFavoriteSnack
+
+            val animalViewModel = AnimalViewModel(animalIdx, animalType, animalName!!, animalAge!!, animalGender, animalFavoriteSnack!!)
 
             return animalViewModel
             }
