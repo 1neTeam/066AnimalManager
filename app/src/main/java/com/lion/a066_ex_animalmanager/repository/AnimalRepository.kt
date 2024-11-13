@@ -1,5 +1,6 @@
 package com.lion.a061ex_roomdatabase.repository
 
+import AnimalGender
 import AnimalType
 import android.content.Context
 import com.lion.a061ex_roomdatabase.viewmodel.AnimalViewModel
@@ -18,7 +19,7 @@ class AnimalRepository {
             val animalType = animalViewModel.animalType.number
             val animalName = animalViewModel.animalName
             val animalAge = animalViewModel.animalAge
-            val animalGender = animalViewModel.animalGender
+            val animalGender = animalViewModel.animalGender.number
             val animalFavoriteSnack = animalViewModel.animalFavoriteSnack
 
             val animalVO = AnimalVO(animalType = animalType, animalName = animalName, animalAge = animalAge, animalGender = animalGender, animalFavoriteSnack = animalFavoriteSnack)
@@ -45,7 +46,10 @@ class AnimalRepository {
                 val animalName = it.animalName
                 val animalAge = it.animalAge
                 val animalIdx = it.animalIdx
-                val animalGender = it.animalGender
+                val animalGender = when(it.animalGender) {
+                    AnimalGender.ANIMAL_GENDER_MALE.number -> AnimalGender.ANIMAL_GENDER_MALE
+                    else -> AnimalGender.ANIMAL_GENDER_FEMALE
+                }
                 val animalFavoriteSnack = it.animalFavoriteSnack
 
                 // 객체에 담는다.
@@ -54,6 +58,31 @@ class AnimalRepository {
                 animalViewModelList.add(animalViewModel)
             }
             return animalViewModelList
+        }
+
+        // 동물 한 마리의 정보를 가져온다.
+        fun selectAnimalIfoByStudentIdx(context: Context, animalIdx:Int) : AnimalViewModel {
+            val animalDatabase = AnimalDatabase.getInstance(context)
+            // 동물 한 마리의 정보를 가져온다.
+            val animalVo = animalDatabase?.animalDAO()?.selectAnimalDataByAnimalIdx(animalIdx)
+            // 동물 객체에 담는다.
+            val animalType = when(animalVo?.animalType) {
+                AnimalType.Animal_TYPE_DOG.number -> AnimalType.Animal_TYPE_CAT
+                AnimalType.Animal_TYPE_CAT.number -> AnimalType.Animal_TYPE_DOG
+                else -> AnimalType.Animal_TYPE_PARROT
+            }
+            val animalName = animalVo?.animalName
+            val animalAge = animalVo?.animalAge
+
+            val animalGender = when(animalVo?.animalGender) {
+                AnimalGender.ANIMAL_GENDER_MALE.number -> AnimalGender.ANIMAL_GENDER_MALE
+                else -> AnimalGender.ANIMAL_GENDER_FEMALE
+            }
+
+            val animalViewModel = AnimalViewModel(animalIdx, animalType, animalName!!, animalAge!!, animalGender)
+
+            return animalViewModel
+            }
         }
     }
 }

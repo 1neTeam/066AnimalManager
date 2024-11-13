@@ -1,5 +1,6 @@
 package com.lion.a061ex_roomdatabase.viewmodel
 
+import AnimalGender
 import AnimalType
 
 data class AnimalViewModel(
@@ -7,5 +8,5 @@ data class AnimalViewModel(
     var animalType:AnimalType,
     var animalName:String,
     var animalAge:Int,
-    var animalGender:String,
+    var animalGender:AnimalGender,
     var animalFavoriteSnack:String)
