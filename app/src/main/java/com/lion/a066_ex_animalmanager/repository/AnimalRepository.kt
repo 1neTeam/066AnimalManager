@@ -84,7 +84,7 @@ class AnimalRepository {
             val animalViewModel = AnimalViewModel(animalIdx, animalType, animalName!!, animalAge!!, animalGender, animalFavoriteSnack!!)
 
             return animalViewModel
-            }
+
         }
     }
 }
