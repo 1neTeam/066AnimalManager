@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
+        val str = "test"
         // 첫 화면을 설정한다.
         replaceFragment(FragmentName.MAIN_FRAGMENT, false, null)
     }
