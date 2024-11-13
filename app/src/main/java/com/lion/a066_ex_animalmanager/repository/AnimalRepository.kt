@@ -2,6 +2,7 @@ package com.lion.a061ex_roomdatabase.repository
 
 import AnimalType
 import android.content.Context
+import android.util.Log
 import com.lion.a061ex_roomdatabase.viewmodel.AnimalViewModel
 import com.lion.team1_project.dao.AnimalDatabase
 import com.lion.team1_project.vo.AnimalVO
@@ -19,9 +20,9 @@ class AnimalRepository {
             val animalName = animalViewModel.animalName
             val animalAge = animalViewModel.animalAge
             val animalGender = animalViewModel.animalGender
-            // val animalFavoriteSnack = animalViewModel.animalFavoriteSnack
+            val animalFavoriteSnack = animalViewModel.animalFavoriteSnack
 
-            val animalVO = AnimalVO(animalType = animalType, animalName = animalName, animalAge = animalAge, animalGender = animalGender, /*animalFavoriteSnack = animalFavoriteSnack*/)
+            val animalVO = AnimalVO(animalType = animalType, animalName = animalName, animalAge = animalAge, animalGender = animalGender, animalFavoriteSnack = animalFavoriteSnack)
 
             animalDatabase?.animalDAO()?.insertAnimalData(animalVO)
         }
@@ -36,6 +37,9 @@ class AnimalRepository {
             val animalViewModelList = mutableListOf<AnimalViewModel>()
             // 동물의 수 만큼 반복한다.
             animalVoList?.forEach {
+
+                Log.d("test100", "it : ${it}" )
+
                 // 동물 데이터를 추출한다.
                 val animalType = when(it.animalType){
                     AnimalType.Animal_TYPE_DOG.number -> AnimalType.Animal_TYPE_DOG
@@ -50,9 +54,14 @@ class AnimalRepository {
 
                 // 객체에 담는다.
                 val animalViewModel = AnimalViewModel(animalIdx, animalType, animalName, animalAge, animalGender, animalFavoriteSnack)
+
+                Log.d("test100", "animalViewModel : ${animalViewModel}" )
+
                 // 리스트에 담는다.
                 animalViewModelList.add(animalViewModel)
             }
+
+
             return animalViewModelList
         }
     }

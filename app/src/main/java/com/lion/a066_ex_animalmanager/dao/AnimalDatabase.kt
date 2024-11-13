@@ -19,7 +19,7 @@ abstract class AnimalDatabase : RoomDatabase(){
             synchronized(AnimalDatabase::class){
                 animalDatabase = Room.databaseBuilder(
                     context.applicationContext, AnimalDatabase::class.java,
-                    "Animal.db"
+                    "Team1Animal.db"
                 ).build()
             }
             return animalDatabase

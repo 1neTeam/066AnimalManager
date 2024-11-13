@@ -1,10 +1,12 @@
 package com.lion.a066_ex_animalmanager.fragment
 
+import AnimalType
+import FragmentName
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.lion.a061ex_roomdatabase.repository.AnimalRepository
 import com.lion.a061ex_roomdatabase.viewmodel.AnimalViewModel
 import com.lion.a066_ex_animalmanager.MainActivity
@@ -68,18 +70,18 @@ class InputFragment : Fragment() {
                             chipGroupSnacksInputFragment.checkedChipIds.forEach {
                             when (it) {
                                 R.id.chipAppleInputFragment -> {
-                                    snackList+= "사과"
+                                    snackList+=" 사과"
                                 }
                                 R.id.chipBananaInputFragment ->{
-                                    snackList+= "바나나"
+                                    snackList+= " 바나나"
                                 }
                                 else->{
-                                    snackList+= "오렌지"
+                                    snackList+= " 오렌지"
                                 }
                             }
                         }
                         // 모델 생성
-                        val animalViewModel = AnimalViewModel(0,animalType, animalName, animalAge, animalGender, snackList)
+                        val animalViewModel = AnimalViewModel(0,animalType, animalName, animalAge, animalGender, snackList.trim())
 
                         // 데이터 저장
                         CoroutineScope(Dispatchers.Main).launch {
