@@ -38,7 +38,7 @@
             app:singleSelection="true">
 
             <Button
-                android:id="@+id/segmentButtonDogModifyFragment"
+                android:id="@+id/buttonTypeDogModifyFragment"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -46,7 +46,7 @@
                 android:text="강아지" />
 
             <Button
-                android:id="@+id/segmentButtonCatModifyFragment"
+                android:id="@+id/buttonTypeCatModifyFragment"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -54,7 +54,7 @@
                 android:text="고양이" />
 
             <Button
-                android:id="@+id/segmentButtonParrotModifyFragment"
+                android:id="@+id/buttonTypeParrotModifyFragment"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
