@@ -25,4 +25,8 @@ class InputFragment : Fragment() {
         return fragmentInputBinding.root
     }
 
+    fun settingToolbar() {
+
+    }
+
 }
