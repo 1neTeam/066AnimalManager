@@ -19,9 +19,9 @@ class AnimalRepository {
             val animalName = animalViewModel.animalName
             val animalAge = animalViewModel.animalAge
             val animalGender = animalViewModel.animalGender
-            val animalFavoriteSnack = animalViewModel.animalFavoriteSnack
+            // val animalFavoriteSnack = animalViewModel.animalFavoriteSnack
 
-            val animalVO = AnimalVO(animalType = animalType, animalName = animalName, animalAge = animalAge, animalGender = animalGender, animalFavoriteSnack = animalFavoriteSnack)
+            val animalVO = AnimalVO(animalType = animalType, animalName = animalName, animalAge = animalAge, animalGender = animalGender, /*animalFavoriteSnack = animalFavoriteSnack*/)
 
             animalDatabase?.animalDAO()?.insertAnimalData(animalVO)
         }

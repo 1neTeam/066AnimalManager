@@ -5,9 +5,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.lion.a061ex_roomdatabase.repository.AnimalRepository
+import com.lion.a061ex_roomdatabase.viewmodel.AnimalViewModel
 import com.lion.a066_ex_animalmanager.MainActivity
 import com.lion.a066_ex_animalmanager.R
 import com.lion.a066_ex_animalmanager.databinding.FragmentInputBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 class InputFragment : Fragment() {
 
@@ -21,12 +27,79 @@ class InputFragment : Fragment() {
     ): View? {
         fragmentInputBinding = FragmentInputBinding.inflate(inflater)
         mainActivity = activity as MainActivity
-        // Inflate the layout for this fragment
+
+        settingToolbar()
         return fragmentInputBinding.root
     }
 
+    //툴바
     fun settingToolbar() {
+        fragmentInputBinding.apply {
+            toolbarInputFragment.title = "동물 정보 입력"
 
+            //네비게이션 아이콘
+            toolbarInputFragment.setNavigationOnClickListener {
+                mainActivity.removeFragment(FragmentName.INPUT_FRAGMENT)
+            }
+
+            //메뉴
+            toolbarInputFragment.setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.toolbar_menu_done_input_fragment -> {
+                        // 사용자가 입력한 데이터 가져오기
+                        // 동물 종
+                        val animalType = when (toggleGroupTypeInputFragment.checkedButtonId) {
+                            R.id.buttonTypeDogInputFragment -> AnimalType.Animal_TYPE_DOG
+                            R.id.buttonTypeCatInputFragment -> AnimalType.Animal_TYPE_CAT
+                            else-> AnimalType.Animal_TYPE_PARROT
+                        }
+
+                        // 이름
+                        val animalName = textFieldInputNameInputFragment.editText?.text.toString()
+                        // 나이
+                        val animalAge = textFieldInputAgeInputFragment.editText?.text.toString().toInt()
+                        // 성별
+                        val animalGender = when (radioGroupGenderInputFragment.checkedRadioButtonId) {
+                            R.id.radioButtonGenderMaleInputFragment -> "남자"
+                            else -> "여자"
+                        }
+                        // 간식목록
+                        var snackList = ""
+                            chipGroupSnacksInputFragment.checkedChipIds.forEach {
+                            when (it) {
+                                R.id.chipAppleInputFragment -> {
+                                    snackList+= "사과"
+                                }
+                                R.id.chipBananaInputFragment ->{
+                                    snackList+= "바나나"
+                                }
+                                else->{
+                                    snackList+= "오렌지"
+                                }
+                            }
+                        }
+                        // 모델 생성
+                        val animalViewModel = AnimalViewModel(0,animalType, animalName, animalAge, animalGender, snackList)
+
+                        // 데이터 저장
+                        CoroutineScope(Dispatchers.Main).launch {
+                            // 저장 작업 끝날때까지 대기
+                            val work1 = async(Dispatchers.IO){
+                                // 저장
+                                AnimalRepository.insertAnimalInfo(mainActivity, animalViewModel)
+                            }
+                            // 리턴없이 삽입이라 조인
+                            work1.join()
+                            mainActivity.removeFragment(FragmentName.INPUT_FRAGMENT)
+                        }
+                    }
+                }
+                true
+            }
+
+        }
     }
+
+
 
 }
