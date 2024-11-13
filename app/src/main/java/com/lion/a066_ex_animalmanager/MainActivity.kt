@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        val str = "test1"
+
         val str2 = "test2"
         val test3 = "test3"
 
