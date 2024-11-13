@@ -32,7 +32,8 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        val str3 = "test3"
+        val str3 = "testMain"
+        val str4 = "testMain"
 
         // 첫 화면을 설정한다.
         replaceFragment(FragmentName.MAIN_FRAGMENT, false, null)
