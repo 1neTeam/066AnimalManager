@@ -1,7 +1,9 @@
 package com.lion.a066_ex_animalmanager.fragment
 
+import AnimalFood
 import AnimalGender
 import AnimalType
+import FragmentName
 import android.content.DialogInterface
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -34,6 +36,8 @@ class ModifyFragment : Fragment() {
 
         // 툴바 설정 메서드 호출
         settingToolbar()
+        // 입력 요소들 초기 설정
+        settingInput()
 
         return fragmentModifyBinding.root
     }
@@ -52,7 +56,7 @@ class ModifyFragment : Fragment() {
             toolbarModify.setOnMenuItemClickListener {
                 when(it.itemId) {
                     R.id.modify_toolbar_menu_done -> {
-                        mainActivity.removeFragment(FragmentName.MODIFY_FRAGMENT)
+                        modifyDone()
                     }
                 }
                 true
@@ -94,6 +98,20 @@ class ModifyFragment : Fragment() {
                         radioGroupGenderModifyFragment.check(R.id.radioButtonFemaleModifyFragment)
                     }
                 }
+
+                animalViewModel.animalFavoriteSnack.forEach { snack ->
+                    when (snack) {
+                        AnimalFood.FOOD_APPLE -> {
+                            chipGroupSnacksModifyFragment.check(R.id.chipAppleModifyFragment)
+                        }
+                        AnimalFood.FOOD_BANANA -> {
+                            chipGroupSnacksModifyFragment.check(R.id.chipBananaModifyFragment)
+                        }
+                        AnimalFood.FOOD_ORANGE -> {
+                            chipGroupSnacksModifyFragment.check(R.id.chipOrangeModifyFragment)
+                        }
+                    }
+                }
             }
         }
     }
@@ -118,9 +136,25 @@ class ModifyFragment : Fragment() {
                 R.id.radioButtonMaleModifyFragment -> AnimalGender.ANIMAL_GENDER_MALE
                 else -> AnimalGender.ANIMAL_GENDER_FEMALE
             }
+            val animalFavoriteSnack = mutableListOf<AnimalFood>()
+            fragmentModifyBinding.chipGroupSnacksModifyFragment.checkedChipIds.forEach {
+                when (it) {
+                    R.id.chipAppleModifyFragment -> animalFavoriteSnack.add(AnimalFood.FOOD_APPLE)
+                    R.id.chipBananaModifyFragment -> animalFavoriteSnack.add(AnimalFood.FOOD_BANANA)
+                    R.id.chipOrangeModifyFragment -> animalFavoriteSnack.add(AnimalFood.FOOD_ORANGE)
+                }
+            }
 
-            val animalViewModel = AnimalViewModel(animalIdx, animalType, animalName, animalAge, animalGender, animalFavoriteSnack = String)
+            val animalViewModel = AnimalViewModel(animalIdx, animalType, animalName, animalAge, animalGender, animalFavoriteSnack)
+
+            CoroutineScope(Dispatchers.Main).launch {
+                val work1 = async(Dispatchers.IO) {
+                    AnimalRepository.updateAnimalInfo(mainActivity, animalViewModel)
+                }
+                work1.join()
+                mainActivity.removeFragment(FragmentName.MODIFY_FRAGMENT)
+            }
         }
+        materialAlertDialogBuilder.show()
     }
-
 }

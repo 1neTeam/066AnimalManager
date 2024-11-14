@@ -22,7 +22,7 @@ class AnimalRepository {
             val animalGender = animalViewModel.animalGender.number
             val animalFavoriteSnack = animalViewModel.animalFavoriteSnack
 
-            val animalVO = AnimalVO(animalType = animalType, animalName = animalName, animalAge = animalAge, animalGender = animalGender, animalFavoriteSnack = animalFavoriteSnack)
+            val animalVO = AnimalVO(animalType = animalType, animalName = animalName, animalAge = animalAge, animalGender = animalGender, animalFavoriteSnack = animalFavoriteSnack.toString())
 
             animalDatabase?.animalDAO()?.insertAnimalData(animalVO)
         }
@@ -81,10 +81,26 @@ class AnimalRepository {
 
             val animalFavoriteSnack = animalVo?.animalFavoriteSnack
 
-            val animalViewModel = AnimalViewModel(animalIdx, animalType, animalName!!, animalAge!!, animalGender, animalFavoriteSnack!!)
+            val animalViewModel = AnimalViewModel(animalIdx, animalType, animalName!!, animalAge!!, animalGender, animalFavoriteSnack)
 
             return animalViewModel
+        }
 
+        // 동물 정보를 수정하는 메서드
+        fun updateAnimalInfo(context: Context, animalViewModel: AnimalViewModel){
+            val animalDatabase = AnimalDatabase.getInstance(context)
+            // VO에 객체에 담아준다
+            val animalIdx = animalViewModel.animalIdx
+            val animalType = animalViewModel.animalType.number
+            val animalName = animalViewModel.animalName
+            val animalAge = animalViewModel.animalAge
+            val animalGender = animalViewModel.animalGender.number
+            val animalFavoriteSnack = animalViewModel.animalFavoriteSnack
+            val animalVO = AnimalVO(animalIdx, animalName, animalAge, animalType, animalGender,
+                animalFavoriteSnack.toString()
+            )
+            // 수정한다.
+            animalDatabase?.animalDAO()?.updateAnimalData(animalVO)
         }
     }
 }

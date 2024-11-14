@@ -27,3 +27,10 @@ enum class AnimalGender(var number: Int, var str:String) {
     ANIMAL_GENDER_FEMALE(2, "암컷")
 
 }
+
+// 간식
+enum class AnimalFood(var number:Int, var str:String){
+    FOOD_APPLE(1, "사과"),
+    FOOD_BANANA(2, "바나나"),
+    FOOD_ORANGE(3, "오렌지")
+}
