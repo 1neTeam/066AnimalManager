@@ -1,8 +1,10 @@
 package com.lion.a066_ex_animalmanager.fragment
 
+import AnimalGender
 import AnimalType
 import FragmentName
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,7 +28,7 @@ class InputFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         fragmentInputBinding = FragmentInputBinding.inflate(inflater)
         mainActivity = activity as MainActivity
 
@@ -62,21 +64,21 @@ class InputFragment : Fragment() {
                         val animalAge = textFieldInputAgeInputFragment.editText?.text.toString().toInt()
                         // 성별
                         val animalGender = when (radioGroupGenderInputFragment.checkedRadioButtonId) {
-                            R.id.radioButtonGenderMaleInputFragment -> "남자"
-                            else -> "여자"
+                            R.id.radioButtonGenderMaleInputFragment -> AnimalGender.ANIMAL_GENDER_MALE
+                            else -> AnimalGender.ANIMAL_GENDER_FEMALE
                         }
                         // 간식목록
                         var snackList = ""
                             chipGroupSnacksInputFragment.checkedChipIds.forEach {
                             when (it) {
                                 R.id.chipAppleInputFragment -> {
-                                    snackList+=" 사과"
+                                    snackList+=" ${AnimalFood.FOOD_APPLE.str}"
                                 }
                                 R.id.chipBananaInputFragment ->{
-                                    snackList+= " 바나나"
+                                    snackList+= " ${AnimalFood.FOOD_BANANA.str}"
                                 }
                                 else->{
-                                    snackList+= " 오렌지"
+                                    snackList+= " ${AnimalFood.FOOD_ORANGE.str}"
                                 }
                             }
                         }
@@ -89,6 +91,8 @@ class InputFragment : Fragment() {
                             val work1 = async(Dispatchers.IO){
                                 // 저장
                                 AnimalRepository.insertAnimalInfo(mainActivity, animalViewModel)
+                                Log.d("test100", "$animalViewModel")
+
                             }
                             // 리턴없이 삽입이라 조인
                             work1.join()

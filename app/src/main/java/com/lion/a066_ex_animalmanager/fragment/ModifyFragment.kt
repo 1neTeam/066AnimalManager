@@ -30,7 +30,7 @@ class ModifyFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         fragmentModifyBinding = FragmentModifyBinding.inflate(layoutInflater)
         // Inflate the layout for this fragment
 
@@ -99,16 +99,18 @@ class ModifyFragment : Fragment() {
                     }
                 }
 
-                animalViewModel.animalFavoriteSnack.forEach { snack ->
-                    when (snack) {
-                        AnimalFood.FOOD_APPLE -> {
-                            chipGroupSnacksModifyFragment.check(R.id.chipAppleModifyFragment)
+                // 간식목록
+                var snackList = ""
+                chipGroupSnacksModifyFragment.checkedChipIds.forEach {
+                    when (it) {
+                        R.id.chipAppleInputFragment ->{
+                            snackList+=" ${AnimalFood.FOOD_APPLE.str}"
                         }
-                        AnimalFood.FOOD_BANANA -> {
-                            chipGroupSnacksModifyFragment.check(R.id.chipBananaModifyFragment)
+                        R.id.chipBananaInputFragment ->{
+                            snackList+= " ${AnimalFood.FOOD_BANANA.str}"
                         }
-                        AnimalFood.FOOD_ORANGE -> {
-                            chipGroupSnacksModifyFragment.check(R.id.chipOrangeModifyFragment)
+                        else->{
+                            snackList+= " ${AnimalFood.FOOD_ORANGE.str}"
                         }
                     }
                 }
@@ -136,16 +138,16 @@ class ModifyFragment : Fragment() {
                 R.id.radioButtonMaleModifyFragment -> AnimalGender.ANIMAL_GENDER_MALE
                 else -> AnimalGender.ANIMAL_GENDER_FEMALE
             }
-            val animalFavoriteSnack = mutableListOf<AnimalFood>()
+            var animalFavoriteSnack = ""
             fragmentModifyBinding.chipGroupSnacksModifyFragment.checkedChipIds.forEach {
                 when (it) {
-                    R.id.chipAppleModifyFragment -> animalFavoriteSnack.add(AnimalFood.FOOD_APPLE)
-                    R.id.chipBananaModifyFragment -> animalFavoriteSnack.add(AnimalFood.FOOD_BANANA)
-                    R.id.chipOrangeModifyFragment -> animalFavoriteSnack.add(AnimalFood.FOOD_ORANGE)
+                    R.id.chipAppleModifyFragment -> animalFavoriteSnack += " "+AnimalFood.FOOD_APPLE.str
+                    R.id.chipBananaModifyFragment -> animalFavoriteSnack += " "+AnimalFood.FOOD_BANANA.str
+                    R.id.chipOrangeModifyFragment -> animalFavoriteSnack += " "+AnimalFood.FOOD_ORANGE.str
                 }
             }
 
-            val animalViewModel = AnimalViewModel(animalIdx, animalType, animalName, animalAge, animalGender, animalFavoriteSnack)
+            val animalViewModel = AnimalViewModel(animalIdx, animalType, animalName, animalAge, animalGender, animalFavoriteSnack.trim())
 
             CoroutineScope(Dispatchers.Main).launch {
                 val work1 = async(Dispatchers.IO) {
