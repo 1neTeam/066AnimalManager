@@ -6,6 +6,7 @@ import AnimalType
 import FragmentName
 import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -31,8 +32,9 @@ class ModifyFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        mainActivity = activity as MainActivity
+
         fragmentModifyBinding = FragmentModifyBinding.inflate(layoutInflater)
-        // Inflate the layout for this fragment
 
         // 툴바 설정 메서드 호출
         settingToolbar()
@@ -72,7 +74,7 @@ class ModifyFragment : Fragment() {
             // 동물 데이터를 가져온다.
             CoroutineScope(Dispatchers.Main).launch {
                 val work1 = async(Dispatchers.IO) {
-                    AnimalRepository.selectAnimalIfoByStudentIdx(mainActivity, animalIdx)
+                    AnimalRepository.selectAnimalByAnimalIdx(mainActivity, animalIdx)
                 }
                 val animalViewModel = work1.await()
 
@@ -88,7 +90,7 @@ class ModifyFragment : Fragment() {
                     }
                 }
                 textFieldNameModifyFragment.editText?.setText(animalViewModel.animalName)
-                textFieldAgeModifyFragment.editText?.setText(animalViewModel.animalAge)
+                textFieldAgeModifyFragment.editText?.setText("${animalViewModel.animalAge}")
 
                 when(animalViewModel.animalGender) {
                     AnimalGender.ANIMAL_GENDER_MALE -> {
@@ -100,17 +102,18 @@ class ModifyFragment : Fragment() {
                 }
 
                 // 간식목록
-                var snackList = ""
-                chipGroupSnacksModifyFragment.checkedChipIds.forEach {
+                var snackList = animalViewModel.animalFavoriteSnack.split(" ")
+                Log.d("test100", "snackList : ${snackList}")
+                snackList.forEach {
                     when (it) {
-                        R.id.chipAppleInputFragment ->{
-                            snackList+=" ${AnimalFood.FOOD_APPLE.str}"
+                        AnimalFood.FOOD_APPLE.str ->{
+                            chipGroupSnacksModifyFragment.check(R.id.chipAppleModifyFragment)
                         }
-                        R.id.chipBananaInputFragment ->{
-                            snackList+= " ${AnimalFood.FOOD_BANANA.str}"
+                        AnimalFood.FOOD_BANANA.str ->{
+                            chipGroupSnacksModifyFragment.check(R.id.chipBananaModifyFragment)
                         }
                         else->{
-                            snackList+= " ${AnimalFood.FOOD_ORANGE.str}"
+                            chipGroupSnacksModifyFragment.check(R.id.chipOrangeModifyFragment)
                         }
                     }
                 }
