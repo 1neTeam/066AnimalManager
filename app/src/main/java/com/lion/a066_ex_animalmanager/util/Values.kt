@@ -19,3 +19,18 @@ enum class AnimalType(var number:Int, var str:String){
     // 앵무새
     Animal_TYPE_PARROT(3, "앵무새")
 }
+
+enum class AnimalGender(var number: Int, var str:String) {
+    // 수컷
+    ANIMAL_GENDER_MALE(1, "수컷"),
+    // 암컷
+    ANIMAL_GENDER_FEMALE(2, "암컷")
+
+}
+
+// 간식
+enum class AnimalFood(var number:Int, var str:String){
+    FOOD_APPLE(1, "사과"),
+    FOOD_BANANA(2, "바나나"),
+    FOOD_ORANGE(3, "오렌지")
+}
