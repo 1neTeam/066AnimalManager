@@ -61,7 +61,7 @@ class AnimalRepository {
             return animalViewModelList
         }
 
-        // 동물 한 마리의 정보를 가져온다.
+        // 동물 한 마리의 정보를 가져온다
         fun selectAnimalIfoByStudentIdx(context: Context, animalIdx:Int) : AnimalViewModel {
             val animalDatabase = AnimalDatabase.getInstance(context)
             // 동물 한 마리의 정보를 가져온다.
