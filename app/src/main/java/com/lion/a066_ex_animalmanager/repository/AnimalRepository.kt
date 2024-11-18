@@ -80,12 +80,18 @@ class AnimalRepository {
                 else -> AnimalGender.ANIMAL_GENDER_FEMALE
             }
 
-            val animalFavoriteSnack = animalVo?.animalFavoriteSnack?.forEach{
-                when(it) {
-                    AnimalFood.FOOD_APPLE.number -> AnimalFood.FOOD_APPLE
-                    AnimalFood.FOOD_ORANGE.number -> AnimalFood.FOOD_BANANA
-                    AnimalFood.FOOD_ORANGE.number -> AnimalFood.FOOD_ORANGE
-                    else -> throw IllegalArgumentException("선택한 간식이 없습니다.")
+            var animalFavoriteSnack = ""
+            animalVo?.animalFavoriteSnack?.forEach{
+                when (it) {
+                    AnimalFood.FOOD_APPLE.number.toChar() ->  {
+                        animalFavoriteSnack+=" ${AnimalFood.FOOD_APPLE.str}"
+                    }
+                    AnimalFood.FOOD_BANANA.number.toChar() ->  {
+                        animalFavoriteSnack+=" ${AnimalFood.FOOD_BANANA.str}"
+                    }
+                    AnimalFood.FOOD_ORANGE.number.toChar() ->  {
+                        animalFavoriteSnack+=" ${AnimalFood.FOOD_ORANGE.str}"
+                    }
                 }
             }
 

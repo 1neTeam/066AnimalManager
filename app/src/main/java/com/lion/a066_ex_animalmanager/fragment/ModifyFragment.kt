@@ -102,13 +102,13 @@ class ModifyFragment : Fragment() {
 
                 animalViewModel.animalFavoriteSnack.forEach { snack ->
                     when (snack) {
-                        AnimalFood.FOOD_APPLE -> {
+                        AnimalFood.FOOD_APPLE.number.toChar() -> {
                             chipGroupSnacksModifyFragment.check(R.id.chipAppleModifyFragment)
                         }
-                        AnimalFood.FOOD_BANANA -> {
+                        AnimalFood.FOOD_BANANA.number.toChar() -> {
                             chipGroupSnacksModifyFragment.check(R.id.chipBananaModifyFragment)
                         }
-                        AnimalFood.FOOD_ORANGE -> {
+                        AnimalFood.FOOD_ORANGE.number.toChar() -> {
                             chipGroupSnacksModifyFragment.check(R.id.chipOrangeModifyFragment)
                         }
                     }
@@ -138,15 +138,17 @@ class ModifyFragment : Fragment() {
                 else -> AnimalGender.ANIMAL_GENDER_FEMALE
             }
             val animalFavoriteSnack = mutableListOf<AnimalFood>()
-            fragmentModifyBinding.chipGroupSnacksModifyFragment.checkedChipIds.forEach {
-                when (it) {
+            fragmentModifyBinding.chipGroupSnacksModifyFragment.checkedChipIds.forEach { id ->
+                when (id) {
                     R.id.chipAppleModifyFragment -> animalFavoriteSnack.add(AnimalFood.FOOD_APPLE)
                     R.id.chipBananaModifyFragment -> animalFavoriteSnack.add(AnimalFood.FOOD_BANANA)
                     R.id.chipOrangeModifyFragment -> animalFavoriteSnack.add(AnimalFood.FOOD_ORANGE)
                 }
             }
 
-            val animalViewModel = AnimalViewModel(animalIdx, animalType, animalName, animalAge, animalGender, animalFavoriteSnack)
+            val animalViewModel = AnimalViewModel(animalIdx, animalType, animalName, animalAge, animalGender,
+                animalFavoriteSnack.toString()
+            )
 
             CoroutineScope(Dispatchers.Main).launch {
                 val work1 = async(Dispatchers.IO) {
