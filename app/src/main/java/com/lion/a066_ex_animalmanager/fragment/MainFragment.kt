@@ -33,7 +33,6 @@ class MainFragment : Fragment() {
         fragmentMainBinding = FragmentMainBinding.inflate(inflater)
         mainActivity = activity as MainActivity
 
-        val str= " "
         settingToolbar()
 
         settingFAB()
