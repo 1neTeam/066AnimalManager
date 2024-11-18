@@ -1,5 +1,6 @@
 package com.lion.a061ex_roomdatabase.repository
 
+import AnimalFood
 import AnimalGender
 import AnimalType
 import android.content.Context
@@ -9,10 +10,10 @@ import com.lion.team1_project.vo.AnimalVO
 
 class AnimalRepository {
 
-    companion object {
+    companion object{
 
         // 동물 정보를 저장하는 메서드
-        fun insertAnimalInfo(context: Context, animalViewModel: AnimalViewModel) {
+        fun insertAnimalInfo(context: Context, animalViewModel: AnimalViewModel){
             // 데이터베이스 객체를 가져온다.
             val animalDatabase = AnimalDatabase.getInstance(context)
             // ViewModel에 있는 데이터를 VO에 담아준다.
@@ -22,19 +23,13 @@ class AnimalRepository {
             val animalGender = animalViewModel.animalGender.number
             val animalFavoriteSnack = animalViewModel.animalFavoriteSnack
 
-            val animalVO = AnimalVO(
-                animalType = animalType,
-                animalName = animalName,
-                animalAge = animalAge,
-                animalGender = animalGender,
-                animalFavoriteSnack = animalFavoriteSnack
-            )
+            val animalVO = AnimalVO(animalType = animalType, animalName = animalName, animalAge = animalAge, animalGender = animalGender, animalFavoriteSnack = animalFavoriteSnack)
 
             animalDatabase?.animalDAO()?.insertAnimalData(animalVO)
         }
 
         // 동물 정보 전체를 가져오는 메서드
-        fun selectAnimalInfoAll(context: Context): MutableList<AnimalViewModel> {
+        fun selectAnimalInfoAll(context: Context) : MutableList<AnimalViewModel>{
             // 데이터 베이스 객체
             val animalDatabase = AnimalDatabase.getInstance(context)
             // 동물 데이터 전체를 가져온다
@@ -44,7 +39,7 @@ class AnimalRepository {
             // 동물의 수 만큼 반복한다.
             animalVoList?.forEach {
                 // 동물 데이터를 추출한다.
-                val animalType = when (it.animalType) {
+                val animalType = when(it.animalType){
                     AnimalType.Animal_TYPE_DOG.number -> AnimalType.Animal_TYPE_DOG
                     AnimalType.Animal_TYPE_CAT.number -> AnimalType.Animal_TYPE_CAT
                     else -> AnimalType.Animal_TYPE_PARROT
@@ -52,21 +47,14 @@ class AnimalRepository {
                 val animalName = it.animalName
                 val animalAge = it.animalAge
                 val animalIdx = it.animalIdx
-                val animalGender = when (it.animalGender) {
+                val animalGender = when(it.animalGender) {
                     AnimalGender.ANIMAL_GENDER_MALE.number -> AnimalGender.ANIMAL_GENDER_MALE
                     else -> AnimalGender.ANIMAL_GENDER_FEMALE
                 }
                 val animalFavoriteSnack = it.animalFavoriteSnack
 
                 // 객체에 담는다.
-                val animalViewModel = AnimalViewModel(
-                    animalIdx,
-                    animalType,
-                    animalName,
-                    animalAge,
-                    animalGender,
-                    animalFavoriteSnack
-                )
+                val animalViewModel = AnimalViewModel(animalIdx, animalType, animalName, animalAge, animalGender, animalFavoriteSnack)
                 // 리스트에 담는다.
                 animalViewModelList.add(animalViewModel)
             }
@@ -74,12 +62,12 @@ class AnimalRepository {
         }
 
         // 동물 한 마리의 정보를 가져온다.
-        fun selectAnimalByAnimalIdx(context: Context, animalIdx: Int): AnimalViewModel {
+        fun selectAnimalIfoByStudentIdx(context: Context, animalIdx:Int) : AnimalViewModel {
             val animalDatabase = AnimalDatabase.getInstance(context)
             // 동물 한 마리의 정보를 가져온다.
             val animalVo = animalDatabase?.animalDAO()?.selectAnimalDataByAnimalIdx(animalIdx)
             // 동물 객체에 담는다.
-            val animalType = when (animalVo?.animalType) {
+            val animalType = when(animalVo?.animalType) {
                 AnimalType.Animal_TYPE_DOG.number -> AnimalType.Animal_TYPE_CAT
                 AnimalType.Animal_TYPE_CAT.number -> AnimalType.Animal_TYPE_DOG
                 else -> AnimalType.Animal_TYPE_PARROT
@@ -87,27 +75,27 @@ class AnimalRepository {
             val animalName = animalVo?.animalName
             val animalAge = animalVo?.animalAge
 
-            val animalGender = when (animalVo?.animalGender) {
+            val animalGender = when(animalVo?.animalGender) {
                 AnimalGender.ANIMAL_GENDER_MALE.number -> AnimalGender.ANIMAL_GENDER_MALE
                 else -> AnimalGender.ANIMAL_GENDER_FEMALE
             }
 
-            val animalFavoriteSnack = animalVo?.animalFavoriteSnack
+            val animalFavoriteSnack = animalVo?.animalFavoriteSnack?.forEach{
+                when(it) {
+                    AnimalFood.FOOD_APPLE.number -> AnimalFood.FOOD_APPLE
+                    AnimalFood.FOOD_ORANGE.number -> AnimalFood.FOOD_BANANA
+                    AnimalFood.FOOD_ORANGE.number -> AnimalFood.FOOD_ORANGE
+                    else -> throw IllegalArgumentException("선택한 간식이 없습니다.")
+                }
+            }
 
-            val animalViewModel = AnimalViewModel(
-                animalIdx,
-                animalType,
-                animalName!!,
-                animalAge!!,
-                animalGender,
-                animalFavoriteSnack!!
-            )
+            val animalViewModel = AnimalViewModel(animalIdx, animalType, animalName!!, animalAge!!, animalGender, animalFavoriteSnack)
 
             return animalViewModel
         }
 
         // 동물 정보를 수정하는 메서드
-        fun updateAnimalInfo(context: Context, animalViewModel: AnimalViewModel) {
+        fun updateAnimalInfo(context: Context, animalViewModel: AnimalViewModel){
             val animalDatabase = AnimalDatabase.getInstance(context)
             // VO에 객체에 담아준다
             val animalIdx = animalViewModel.animalIdx
@@ -116,27 +104,11 @@ class AnimalRepository {
             val animalAge = animalViewModel.animalAge
             val animalGender = animalViewModel.animalGender.number
             val animalFavoriteSnack = animalViewModel.animalFavoriteSnack
-            val animalVO = AnimalVO(animalIdx, animalName, animalAge, animalType, animalGender, animalFavoriteSnack)
+            val animalVO = AnimalVO(animalIdx, animalName, animalAge, animalType, animalGender,
+                animalFavoriteSnack.toString()
+            )
             // 수정한다.
             animalDatabase?.animalDAO()?.updateAnimalData(animalVO)
         }
-
-        // 동물 삭제 메서드
-        fun deleteAnimalInfo(context: Context, animalViewModel: AnimalViewModel) {
-            val animalDatabase = AnimalDatabase.getInstance(context)
-            // VO에 객체에 담아준다.
-            val animalIdx = animalViewModel.animalIdx
-            val animalType = animalViewModel.animalType.number
-            val animalName = animalViewModel.animalName
-            val animalAge = animalViewModel.animalAge
-            val animalGender = animalViewModel.animalGender.number
-            val animalFavoriteSnack = animalViewModel.animalFavoriteSnack
-
-            val animalVO = AnimalVO(animalIdx, animalName, animalAge, animalType, animalGender, animalFavoriteSnack)
-            // 삭제한다.
-            animalDatabase?.animalDAO()?.deleteAnimalData(animalVO)
-
-        }
-
     }
 }
