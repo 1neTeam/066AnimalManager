@@ -6,14 +6,13 @@ import AnimalType
 import FragmentName
 import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.lion.a061ex_roomdatabase.repository.AnimalRepository
-import com.lion.a061ex_roomdatabase.viewmodel.AnimalViewModel
+import com.lion.a066ex_animalmanager.repository.AnimalRepository
+import com.lion.a066ex_animalmanager.viewmodel.AnimalViewModel
 import com.lion.a066_ex_animalmanager.MainActivity
 import com.lion.a066_ex_animalmanager.R
 import com.lion.a066_ex_animalmanager.databinding.FragmentModifyBinding
@@ -31,10 +30,10 @@ class ModifyFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        mainActivity = activity as MainActivity
-
+    ): View? {
         fragmentModifyBinding = FragmentModifyBinding.inflate(layoutInflater)
+        mainActivity = activity as MainActivity
+        // Inflate the layout for this fragment
 
         // 툴바 설정 메서드 호출
         settingToolbar()
@@ -74,7 +73,7 @@ class ModifyFragment : Fragment() {
             // 동물 데이터를 가져온다.
             CoroutineScope(Dispatchers.Main).launch {
                 val work1 = async(Dispatchers.IO) {
-                    AnimalRepository.selectAnimalByAnimalIdx(mainActivity, animalIdx)
+                    AnimalRepository.selectAnimalIfoByStudentIdx(mainActivity, animalIdx)
                 }
                 val animalViewModel = work1.await()
 
@@ -90,7 +89,7 @@ class ModifyFragment : Fragment() {
                     }
                 }
                 textFieldNameModifyFragment.editText?.setText(animalViewModel.animalName)
-                textFieldAgeModifyFragment.editText?.setText("${animalViewModel.animalAge}")
+                textFieldAgeModifyFragment.editText?.setText(animalViewModel.animalAge)
 
                 when(animalViewModel.animalGender) {
                     AnimalGender.ANIMAL_GENDER_MALE -> {
@@ -101,18 +100,15 @@ class ModifyFragment : Fragment() {
                     }
                 }
 
-                // 간식목록
-                var snackList = animalViewModel.animalFavoriteSnack.split(" ")
-                Log.d("test100", "snackList : ${snackList}")
-                snackList.forEach {
-                    when (it) {
-                        AnimalFood.FOOD_APPLE.str ->{
+                animalViewModel.animalFavoriteSnack.forEach { snack ->
+                    when (snack) {
+                        AnimalFood.FOOD_APPLE.number.toChar() -> {
                             chipGroupSnacksModifyFragment.check(R.id.chipAppleModifyFragment)
                         }
-                        AnimalFood.FOOD_BANANA.str ->{
+                        AnimalFood.FOOD_BANANA.number.toChar() -> {
                             chipGroupSnacksModifyFragment.check(R.id.chipBananaModifyFragment)
                         }
-                        else->{
+                        AnimalFood.FOOD_ORANGE.number.toChar() -> {
                             chipGroupSnacksModifyFragment.check(R.id.chipOrangeModifyFragment)
                         }
                     }
@@ -141,16 +137,18 @@ class ModifyFragment : Fragment() {
                 R.id.radioButtonMaleModifyFragment -> AnimalGender.ANIMAL_GENDER_MALE
                 else -> AnimalGender.ANIMAL_GENDER_FEMALE
             }
-            var animalFavoriteSnack = ""
-            fragmentModifyBinding.chipGroupSnacksModifyFragment.checkedChipIds.forEach {
-                when (it) {
-                    R.id.chipAppleModifyFragment -> animalFavoriteSnack += " "+AnimalFood.FOOD_APPLE.str
-                    R.id.chipBananaModifyFragment -> animalFavoriteSnack += " "+AnimalFood.FOOD_BANANA.str
-                    R.id.chipOrangeModifyFragment -> animalFavoriteSnack += " "+AnimalFood.FOOD_ORANGE.str
+            val animalFavoriteSnack = mutableListOf<AnimalFood>()
+            fragmentModifyBinding.chipGroupSnacksModifyFragment.checkedChipIds.forEach { id ->
+                when (id) {
+                    R.id.chipAppleModifyFragment -> animalFavoriteSnack.add(AnimalFood.FOOD_APPLE)
+                    R.id.chipBananaModifyFragment -> animalFavoriteSnack.add(AnimalFood.FOOD_BANANA)
+                    R.id.chipOrangeModifyFragment -> animalFavoriteSnack.add(AnimalFood.FOOD_ORANGE)
                 }
             }
 
-            val animalViewModel = AnimalViewModel(animalIdx, animalType, animalName, animalAge, animalGender, animalFavoriteSnack.trim())
+            val animalViewModel = AnimalViewModel(animalIdx, animalType, animalName, animalAge, animalGender,
+                animalFavoriteSnack.toString()
+            )
 
             CoroutineScope(Dispatchers.Main).launch {
                 val work1 = async(Dispatchers.IO) {
