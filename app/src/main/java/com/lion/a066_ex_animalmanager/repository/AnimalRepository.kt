@@ -1,5 +1,6 @@
 package com.lion.a061ex_roomdatabase.repository
 
+import AnimalFood
 import AnimalGender
 import AnimalType
 import android.content.Context
@@ -79,9 +80,16 @@ class AnimalRepository {
                 else -> AnimalGender.ANIMAL_GENDER_FEMALE
             }
 
-            val animalFavoriteSnack = animalVo?.animalFavoriteSnack
+            val animalFavoriteSnack = animalVo?.animalFavoriteSnack?.forEach{
+                when(it) {
+                    AnimalFood.FOOD_APPLE.number -> AnimalFood.FOOD_APPLE
+                    AnimalFood.FOOD_ORANGE.number -> AnimalFood.FOOD_BANANA
+                    AnimalFood.FOOD_ORANGE.number -> AnimalFood.FOOD_ORANGE
+                    else -> throw IllegalArgumentException("선택한 간식이 없습니다.")
+                }
+            }
 
-            val animalViewModel = AnimalViewModel(animalIdx, animalType, animalName!!, animalAge!!, animalGender, animalFavoriteSnack!!)
+            val animalViewModel = AnimalViewModel(animalIdx, animalType, animalName!!, animalAge!!, animalGender, animalFavoriteSnack)
 
             return animalViewModel
         }

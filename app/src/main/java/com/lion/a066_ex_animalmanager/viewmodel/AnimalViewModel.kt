@@ -10,5 +10,5 @@ data class AnimalViewModel(
     var animalName:String,
     var animalAge:Int,
     var animalGender:AnimalGender,
-    var animalFavoriteSnack:MutableList<AnimalFood>
+    var animalFavoriteSnack:List<AnimalFood>
 )
