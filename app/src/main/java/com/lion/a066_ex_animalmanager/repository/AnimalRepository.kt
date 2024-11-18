@@ -68,8 +68,8 @@ class AnimalRepository {
             val animalVo = animalDatabase?.animalDAO()?.selectAnimalDataByAnimalIdx(animalIdx)
             // 동물 객체에 담는다.
             val animalType = when(animalVo?.animalType) {
-                AnimalType.Animal_TYPE_DOG.number -> AnimalType.Animal_TYPE_CAT
-                AnimalType.Animal_TYPE_CAT.number -> AnimalType.Animal_TYPE_DOG
+                AnimalType.Animal_TYPE_DOG.number -> AnimalType.Animal_TYPE_DOG
+                AnimalType.Animal_TYPE_CAT.number -> AnimalType.Animal_TYPE_CAT
                 else -> AnimalType.Animal_TYPE_PARROT
             }
             val animalName = animalVo?.animalName
