@@ -61,15 +61,15 @@ class AnimalRepository {
             return animalViewModelList
         }
 
-        // 동물 한 마리의 정보를 가져온다.
+        // 동물 한 마리의 정보를 가져온다
         fun selectAnimalIfoByStudentIdx(context: Context, animalIdx:Int) : AnimalViewModel {
             val animalDatabase = AnimalDatabase.getInstance(context)
             // 동물 한 마리의 정보를 가져온다.
             val animalVo = animalDatabase?.animalDAO()?.selectAnimalDataByAnimalIdx(animalIdx)
             // 동물 객체에 담는다.
             val animalType = when(animalVo?.animalType) {
-                AnimalType.Animal_TYPE_DOG.number -> AnimalType.Animal_TYPE_CAT
-                AnimalType.Animal_TYPE_CAT.number -> AnimalType.Animal_TYPE_DOG
+                AnimalType.Animal_TYPE_DOG.number -> AnimalType.Animal_TYPE_DOG
+                AnimalType.Animal_TYPE_CAT.number -> AnimalType.Animal_TYPE_CAT
                 else -> AnimalType.Animal_TYPE_PARROT
             }
             val animalName = animalVo?.animalName
