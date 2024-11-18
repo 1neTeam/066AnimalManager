@@ -19,7 +19,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
-
+// push test 1
 class ShowFragment : Fragment() {
 
     lateinit var fragmentShowBinding: FragmentShowBinding
