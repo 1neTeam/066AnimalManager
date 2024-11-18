@@ -19,7 +19,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-
+// commit 24.11.18
 class MainFragment : Fragment() {
     lateinit var fragmentMainBinding: FragmentMainBinding
     lateinit var mainActivity: MainActivity
@@ -33,6 +33,7 @@ class MainFragment : Fragment() {
         fragmentMainBinding = FragmentMainBinding.inflate(inflater)
         mainActivity = activity as MainActivity
 
+        val str= " "
         settingToolbar()
 
         settingFAB()
