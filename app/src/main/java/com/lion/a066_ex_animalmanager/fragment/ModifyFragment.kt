@@ -32,6 +32,7 @@ class ModifyFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         fragmentModifyBinding = FragmentModifyBinding.inflate(layoutInflater)
+        mainActivity = activity as MainActivity
         // Inflate the layout for this fragment
 
         // 툴바 설정 메서드 호출
