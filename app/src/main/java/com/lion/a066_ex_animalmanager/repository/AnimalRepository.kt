@@ -138,5 +138,13 @@ class AnimalRepository {
 
         }
 
+        // 동물 한마리만 정보 삭제
+        fun deleteAnimalInfoByAnimalIdx(context: Context, animalIdx: Int){
+            val animalDatabase = AnimalDatabase.getInstance(context)
+            // 삭제할 동물 번호를 담고 있을 객체를 생성한다.
+            val animalVO = AnimalVO(animalIdx = animalIdx)
+            // 삭제한다
+            animalDatabase?.animalDAO()?.deleteAnimalData(animalVO)
+        }
     }
 }

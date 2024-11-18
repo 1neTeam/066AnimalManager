@@ -2,6 +2,7 @@ package com.lion.a066_ex_animalmanager.fragment
 
 import AnimalFood
 import android.content.DialogInterface
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -30,7 +31,7 @@ class ShowFragment : Fragment() {
 
         // 툴바 설정 메서드 호출
         settingToolbar()
-
+        // 데이터를 가져와 출력한다.
         settingTextView()
 
         return fragmentShowBinding.root
@@ -51,13 +52,16 @@ class ShowFragment : Fragment() {
             toolbarShow.setOnMenuItemClickListener {
                 when(it.itemId){
                     R.id.show_toolbar_menu_edit -> {
-                        // ModifyFragment로 이동한다.
+                        // 동물 번호를 담아준다.
                         val dataBundle = Bundle()
-                        dataBundle.putInt("animalIdx",arguments?.getInt("animalIdx")!!)
+                        dataBundle.putInt("animalIdx", arguments?.getInt("animalIdx")!!)
+                        // ModifyFragment로 이동한다.
                         mainActivity.replaceFragment(FragmentName.MODIFY_FRAGMENT, true, dataBundle)
                     }
                     R.id.show_toolbar_menu_delete -> {
-                        deleteStudentInfo()
+                        // mainActivity.removeFragment(FragmentName.SHOW_FRAGMENT)
+                        // 삭제를 위한 다이얼로그를 띄운다.
+                        deleteAnimalInfo()
                     }
                 }
                 true
@@ -65,71 +69,47 @@ class ShowFragment : Fragment() {
         }
     }
 
-
     // TextView에 값을 설정하는 메서드
     fun settingTextView(){
-        fragmentShowBinding.apply {
-            // 동물 번호를 추출한다.
-            val animalIdx = arguments?.getInt("animalIdx")
-            // 동물 데이터를 가져온다.
-            CoroutineScope(Dispatchers.Main).launch {
-                val work1 = async(Dispatchers.IO) {
-                    AnimalRepository.selectAnimalByAnimalIdx(mainActivity, animalIdx!!)
-                }
-                val animalViewModel = work1.await()
+        // 만일의 경우를 위해 TextView들을 초기화 해준다.
+        fragmentShowBinding.textViewShowType.text = ""
+        fragmentShowBinding.textViewShowName.text = ""
+        fragmentShowBinding.textViewShowAge.text = ""
+        fragmentShowBinding.textViewShowGender.text = ""
+        fragmentShowBinding.textViewShowFood.text = ""
 
-                Log.d("test 200", "viewModel : ${animalViewModel}")
+        // 동물 번호를 추출한다.
+        val animalIdx = arguments?.getInt("animalIdx")
+        // 동물 데이터를 가져와 출력한다.
+        CoroutineScope(Dispatchers.Main).launch {
+            val work1 = async(Dispatchers.IO){
+                AnimalRepository.selectAnimalByAnimalIdx(mainActivity, animalIdx!!)
+            }
+            val animalViewModel = work1.await()
 
-                when(animalViewModel.animalType) {
-                    AnimalType.Animal_TYPE_DOG -> {
-                        toggleGroupTypeShowFragment.check(R.id.buttonTypeDogShowFragment)
-                    }
-                    AnimalType.Animal_TYPE_CAT -> {
-                        toggleGroupTypeShowFragment.check(R.id.buttonTypeCatShowFragment)
-                    }
-                    AnimalType.Animal_TYPE_PARROT -> {
-                        toggleGroupTypeShowFragment.check(R.id.buttonTypeParrotShowFragment)
-                    }
-                }
-                textFieldNameShowFragment.text = "이름 : ${animalViewModel.animalName}"
-                textFieldAgeShowFragment.text = "나이 : ${animalViewModel.animalAge}"
+            fragmentShowBinding.textViewShowType.text = animalViewModel.animalType.str
+            fragmentShowBinding.textViewShowName.text = animalViewModel.animalName
+            fragmentShowBinding.textViewShowAge.text = animalViewModel.animalAge.toString()
+            fragmentShowBinding.textViewShowGender.text = animalViewModel.animalGender.str
+            fragmentShowBinding.textViewShowFood.text = animalViewModel.animalFavoriteSnack
 
+            // 동물 종류에 따라 이미지 변경
+            when (animalViewModel.animalType.str) {
+                "강아지" -> {fragmentShowBinding.ImageViewShowType.setImageResource(R.drawable.dog_35px)
+                    fragmentShowBinding.ImageViewShowType.setColorFilter(Color.parseColor("#785D12"))}
 
-                when(animalViewModel.animalGender) {
-                    AnimalGender.ANIMAL_GENDER_MALE -> {
-                        radioGroupGenderShowFragment.check(R.id.radioButtonMaleShowFragment)
-                    }
-                    AnimalGender.ANIMAL_GENDER_FEMALE -> {
-                        radioGroupGenderShowFragment.check(R.id.radioButtonFemaleShowFragment)
-                    }
-                }
+                "앵무새" -> {fragmentShowBinding.ImageViewShowType.setImageResource(R.drawable.parrot_35px)
+                    fragmentShowBinding.ImageViewShowType.setColorFilter(Color.parseColor("#FF5E00"))}
 
-
-                // 간식목록
-                var snackList = animalViewModel.animalFavoriteSnack.split(" ")
-                Log.d("test100", "snackList : ${snackList}")
-                snackList.forEach {
-                    when (it) {
-                        AnimalFood.FOOD_APPLE.str ->{
-                            chipGroupSnacksShowFragment.check(R.id.chipAppleShowFragment)
-                        }
-                        AnimalFood.FOOD_BANANA.str ->{
-                            chipGroupSnacksShowFragment.check(R.id.chipBananaShowFragment)
-                        }
-                        else->{
-                            chipGroupSnacksShowFragment.check(R.id.chipOrangeShowFragment)
-                        }
-                    }
-                }
+                // 기본 이미지 설정
+                else -> {fragmentShowBinding.ImageViewShowType.setImageResource(R.drawable.cat_35px)
+                    fragmentShowBinding.ImageViewShowType.setColorFilter(Color.parseColor("#F361A6"))}
             }
         }
-
-
-
     }
 
     // 삭제처리 메서드
-    fun deleteStudentInfo(){
+    fun deleteAnimalInfo(){
         // 다이얼로그를 띄워주다.
         val materialAlertDialogBuilder = MaterialAlertDialogBuilder(mainActivity)
         materialAlertDialogBuilder.setTitle("삭제")
@@ -139,14 +119,12 @@ class ShowFragment : Fragment() {
             CoroutineScope(Dispatchers.Main).launch {
                 val work1 = async(Dispatchers.IO){
                     val animalIdx = arguments?.getInt("animalIdx")
-                    val animalVo = AnimalRepository.selectAnimalByAnimalIdx(mainActivity, animalIdx!!)
-                    AnimalRepository.deleteAnimalInfo(mainActivity, animalVo)
+                    AnimalRepository.deleteAnimalInfoByAnimalIdx(mainActivity, animalIdx!!)
                 }
                 work1.join()
+                mainActivity.removeFragment(FragmentName.SHOW_FRAGMENT)
             }
-            mainActivity.removeFragment(FragmentName.SHOW_FRAGMENT)
         }
         materialAlertDialogBuilder.show()
     }
-
 }
