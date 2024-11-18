@@ -18,8 +18,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
-//import com.lion.a066_ex_animalmanager.util.FragmentName
-
 
 class ShowFragment : Fragment() {
 
